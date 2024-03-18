@@ -84,16 +84,16 @@ transporter.verify((error,success) => {
 // };
 
 const signup = (req, res) => {
-    let {name , email , password,role} = req.body;
+    let {fullName , email , password,role} = req.body;
     // name = name.trim();
     // email = email.trim();
     // password = password.trim();
-    if(name == ""||email == ""||password == ""){
+    if(fullName == ""||email == ""||password == ""){
         res.json({
             status:"FAILED",
             message:"Please provide all required fields"
         })
-    }else if(!/^[a-zA-Z]*$/.test(name)){
+    }else if(!/^[a-zA-Z]*$/.test(fullName)){
         res.json({
             status:"FAILED",
             message:"Please provide a valid name"
@@ -122,7 +122,7 @@ const signup = (req, res) => {
             const saltRounds = 10;
             bcrypt.hash(password, saltRounds).then(hashedpassword =>{
                 const newUser = new User({
-                    name,
+                    fullName,
                     email,
                     password: hashedpassword,
                     role,

@@ -3,7 +3,7 @@ const validator = require('validator')
 const userRoles = require('../utils/userRoles')
 
 const userSchema = new mongoose.Schema({
-name:{
+fullName:{
     type:String,
     required:true,
     trim:true,
