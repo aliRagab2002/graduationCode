@@ -152,18 +152,6 @@ const addAllDonors = async (req, res, next) => {
 
 
 
-    //     const donorA = new Donor(req.body);
-    //     donorA.save()
-    //         .then((donorA) => {
-    //             res.send(donorA);
-    //         })
-    //         .catch((e) => {
-    //             res.status(500).send(e); // Sending a proper HTTP status code in case of an error
-    //         });
-    // }else {
-    //             res.status(403).send("Invalid hospital"); // Sending a proper HTTP status code for forbidden access
-    //     }
-    // };
 
 
 
@@ -172,37 +160,6 @@ const addAllDonors = async (req, res, next) => {
 
 
 
-
-// get hospital A 
-// const getDonorHospitalA = async(req,res) => {
-//     try{
-//         const donorA = await Donor.find({hospital:'Hospital A'},{"__v":false})
-//         res.json({status:httpsStatusText.SUCCESS,data:{donorA}})
-//     }catch(err){
-//         res.json({status:httpsStatusText.ERROR,message:err.message})
-//     }
-// };
-
-// const getDonorHospitalA = async (req, res) => {
-//     try {
-//         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-
-//         // Create an array of promises to get the count for each blood type
-//         const promises = bloodTypes.map(async (type) => {
-//             const count = await Donor.countDocuments({ hospital: 'Hospital A', bloodType: type });
-//             return { [type]: count }; // Creating an object with blood type as key and count as value
-//         });
-
-//         // Wait for all promises to resolve
-//         const counts = await Promise.all(promises);
-
-//         const donorA = await Donor.find({ hospital: 'Hospital A' }, { "__v": false });
-
-//         res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodTypeCounts: counts } });
-//     } catch (err) {
-//         res.json({ status: httpsStatusText.ERROR, message: err.message });
-//     }
-// };
 
 
 // const getDonorHospitalA = async (req, res) => {
@@ -241,6 +198,49 @@ const addAllDonors = async (req, res, next) => {
 
 
 
+// const getDonorHospitalA = async (req, res) => {
+//     try {
+//         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
+
+//         // Update records that exceeded 1 day since donation
+//         await Donor.updateMany(
+//             { hospital: 'Hospital A', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+//             { $set: { bloodAmount: 0 } }
+//         );
+
+//         // Create an array of promises to get the total bloodAmount for each blood type
+//         const promises = bloodTypes.map(async (type) => {
+//             const totalAmount = await Donor.aggregate([
+//                 {
+//                     $match: { hospital: 'Hospital A', bloodType: type }
+//                 },
+//                 {
+//                     $group: {
+//                         _id: null,
+//                         totalAmount: { $sum: '$bloodAmount' }
+//                     }
+//                 }
+//             ]);
+
+//             return { [type]: totalAmount.length ? totalAmount[0].totalAmount : 0 };
+//         });
+
+//         // Wait for all promises to resolve
+//         const amounts = await Promise.all(promises);
+
+//         const donorA = await Donor.find({ hospital: 'Hospital A' }, { "__v": false });
+//         const expiredBlood = await Donor.find({bloodAmount:0,hospital: 'Hospital A'})
+//        return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts,expiredBlood } });
+
+        
+//         // res.json({status:httpsStatusText.SUCCESS,data:{expiredBlood}})
+
+//     } catch (err) {
+//         res.json({ status: httpsStatusText.ERROR, message: err.message });
+//     }
+// };
+
+
 const getDonorHospitalA = async (req, res) => {
     try {
         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
@@ -251,8 +251,8 @@ const getDonorHospitalA = async (req, res) => {
             { $set: { bloodAmount: 0 } }
         );
 
-        // Create an array of promises to get the total bloodAmount for each blood type
-        const promises = bloodTypes.map(async (type) => {
+        // Fetch total bloodAmount for each blood type
+        const amounts = await Promise.all(bloodTypes.map(async (type) => {
             const totalAmount = await Donor.aggregate([
                 {
                     $match: { hospital: 'Hospital A', bloodType: type }
@@ -264,24 +264,22 @@ const getDonorHospitalA = async (req, res) => {
                     }
                 }
             ]);
+            return { bloodType: type, totalAmount: totalAmount.length ? totalAmount[0].totalAmount : 0 };
+        }));
 
-            return { [type]: totalAmount.length ? totalAmount[0].totalAmount : 0 };
-        });
-
-        // Wait for all promises to resolve
-        const amounts = await Promise.all(promises);
-
+        // Fetch all donors and expired blood
         const donorA = await Donor.find({ hospital: 'Hospital A' }, { "__v": false });
-        const expiredBlood = await Donor.find({bloodAmount:0,hospital: 'Hospital A'})
-       return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts,expiredBlood } });
+        const expiredBlood = await Donor.find({ bloodAmount: 0, hospital: 'Hospital A' });
 
-        
-        // res.json({status:httpsStatusText.SUCCESS,data:{expiredBlood}})
-
+        // Return response
+        return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts, expiredBlood } });
     } catch (err) {
-        res.json({ status: httpsStatusText.ERROR, message: err.message });
+        return res.json({ status: httpsStatusText.ERROR, message: err.message });
     }
 };
+
+
+
 
 
 
