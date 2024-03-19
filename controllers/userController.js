@@ -330,13 +330,14 @@ const signin = (req,res) => {
                     bcrypt.compare(password,hashedPassword)
                     .then(result =>{
                         if(result){
-                            const token =  generateJWT({email: User.email, id: User.id, role: User.role})
+
+                            
+                            const token = generateJWT({email: data[0].email, id: data[0].id, role: data[0].role});
                             res.json({
-                                status:"SUCCESS",
-                                message:"signing successful",
-                                data:{token,role: User.role}
-                
-                            })
+                                status: "SUCCESS",
+                                message: "signing successful",
+                                data: {token, role: data[0].role}
+                            });
                         }else{
                             res.json({
                             status:"FALIED",
@@ -380,33 +381,33 @@ const signin = (req,res) => {
 }
 
 
-const login = asyncwrapper (async (req, res, next) => {
-    const {email, password} = req.body
+// const login = asyncwrapper (async (req, res, next) => {
+//     const {email, password} = req.body
 
-    if(!email && !password){
-        const error = appError.create('provide email and password',400, httpsStatusText.FAIL)
-        return next(error)
-    }
+//     if(!email && !password){
+//         const error = appError.create('provide email and password',400, httpsStatusText.FAIL)
+//         return next(error)
+//     }
 
-    const user = await User.findOne({email: email})
+//     const user = await User.find({email: email})
 
-    if(!user){
-        const error = appError.create('user not found',400, httpsStatusText.ERROR)
-        return next(error)
-    }
+//     if(!user){
+//         const error = appError.create('user not found',400, httpsStatusText.ERROR)
+//         return next(error)
+//     }
 
-    const matchedPassword = await bcrypt.compare(password, user.password)
+//     const matchedPassword = await bcrypt.compare(password, user.password)
 
-    if(user && matchedPassword){
-        const token = await generateJWT({email: user.email, id: user.id, role: user.role})
+//     if(user && matchedPassword){
+//         const token = await generateJWT({email: user.email, id: user.id, role: user.role})
 
-        return res.status(200).json({stauts: httpsStatusText.SUCCESS, data:{token,role: user.role}})
-    } else {
-        const error = appError.create('invalid email or password',500, httpsStatusText.ERROR)
-        return next(error)
+//         return res.status(200).json({stauts: httpsStatusText.SUCCESS, data:{token,role: user.role}})
+//     } else {
+//         const error = appError.create('invalid email or password',500, httpsStatusText.ERROR)
+//         return next(error)
 
-    }
-})
+//     }
+// })
 
 
 
@@ -416,6 +417,5 @@ module.exports = {
     signup,
     sendVerificationEmail,
     verifyEmail,
-    signin,
-    login
+    signin
 };
