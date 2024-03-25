@@ -336,7 +336,7 @@ const signin = (req,res) => {
                             res.json({
                                 status: "SUCCESS",
                                 message: "signing successful",
-                                data: {token, role: data[0].role}
+                                data: {token, role: data[0].role,email: data[0].email}
                             });
                         }else{
                             res.json({

@@ -241,21 +241,62 @@ const addAllDonors = async (req, res, next) => {
 // };
 
 
+// const getDonorHospitalA = async (req, res) => {
+//     try {
+//         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
+
+//         // Update records that exceeded 1 day since donation
+//         // await Donor.updateMany(
+//         //     { hospital: 'Hospital A', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+//         //     { $set: { bloodAmount: 0 } }
+//         // );
+
+//         // Fetch total bloodAmount for each blood type
+//         const amounts = await Promise.all(bloodTypes.map(async (type) => {
+//             const totalAmount = await Donor.aggregate([
+//                 {
+//                     $match: { hospital: 'Hospital A', bloodType: type }
+//                 },
+//                 {
+//                     $group: {
+//                         _id: null,
+//                         totalAmount: { $sum: '$bloodAmount' }
+//                     }
+//                 }
+//             ]);
+//             return { bloodType: type, totalAmount: totalAmount.length ? totalAmount[0].totalAmount : 0 };
+//         }));
+
+//         // Fetch all donors and expired blood
+//         const donorA = await Donor.find({ hospital: 'Hospital A' }, { "__v": false });
+//         const expiredBlood = await Donor.find({ bloodAmount: 0, hospital: 'Hospital A' });
+
+//         // Return response
+//         return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts, expiredBlood } });
+//     } catch (err) {
+//         return res.json({ status: httpsStatusText.ERROR, message: err.message });
+//     }
+// };
+
+
 const getDonorHospitalA = async (req, res) => {
     try {
         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
 
         // Update records that exceeded 1 day since donation
-        await Donor.updateMany(
-            { hospital: 'Hospital A', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-            { $set: { bloodAmount: 0 } }
-        );
+        // await Donor.updateMany(
+        //     { hospital: 'Hospital A', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+        //     { $set: { bloodAmount: 0 } }
+        // );
 
         // Fetch total bloodAmount for each blood type
         const amounts = await Promise.all(bloodTypes.map(async (type) => {
             const totalAmount = await Donor.aggregate([
                 {
-                    $match: { hospital: 'Hospital A', bloodType: type }
+                    $match: { hospital: 'Hospital A',
+                     bloodType: type,
+                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                    }
                 },
                 {
                     $group: {
@@ -268,8 +309,8 @@ const getDonorHospitalA = async (req, res) => {
         }));
 
         // Fetch all donors and expired blood
-        const donorA = await Donor.find({ hospital: 'Hospital A' }, { "__v": false });
-        const expiredBlood = await Donor.find({ bloodAmount: 0, hospital: 'Hospital A' });
+        const donorA = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } , hospital: 'Hospital A' }, { "__v": false });
+        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }, hospital: 'Hospital A' });
 
         // Return response
         return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts, expiredBlood } });
@@ -282,18 +323,6 @@ const getDonorHospitalA = async (req, res) => {
 
 
 
-
-
-
-// get hospital B
-// const getDonorHospitalB = async(req,res) => {
-//     try{
-//         const donorB = await Donor.find({hospital:'Hospital B'},{"__v":false})
-//         res.json({status:httpsStatusText.SUCCESS,data:{donorB}})
-//     }catch(err){
-//         res.json({status:httpsStatusText.ERROR,message:err.message})
-//     }
-// };
 
 // const getDonorHospitalB = async (req, res) => {
 //     try {
@@ -333,16 +362,19 @@ const getDonorHospitalB = async (req, res) => {
         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
 
         // Update records that exceeded 1 day since donation
-        await Donor.updateMany(
-            { hospital: 'Hospital B', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-            { $set: { bloodAmount: 0 } }
-        );
+        // await Donor.updateMany(
+        //     { hospital: 'Hospital A', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+        //     { $set: { bloodAmount: 0 } }
+        // );
 
-        // Create an array of promises to get the total bloodAmount for each blood type
-        const promises = bloodTypes.map(async (type) => {
+        // Fetch total bloodAmount for each blood type
+        const amounts = await Promise.all(bloodTypes.map(async (type) => {
             const totalAmount = await Donor.aggregate([
                 {
-                    $match: { hospital: 'Hospital B', bloodType: type }
+                    $match: { hospital: 'Hospital B',
+                     bloodType: type,
+                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                    }
                 },
                 {
                     $group: {
@@ -351,39 +383,22 @@ const getDonorHospitalB = async (req, res) => {
                     }
                 }
             ]);
+            return { bloodType: type, totalAmount: totalAmount.length ? totalAmount[0].totalAmount : 0 };
+        }));
 
-            return { [type]: totalAmount.length ? totalAmount[0].totalAmount : 0 };
-        });
+        // Fetch all donors and expired blood
+        const donorHospitalB = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } , hospital: 'Hospital B' }, { "__v": false });
+        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }, hospital: 'Hospital B' });
 
-        // Wait for all promises to resolve
-        const amounts = await Promise.all(promises);
-
-        const donorA = await Donor.find({ hospital: 'Hospital B' }, { "__v": false });
-        const expiredBlood = await Donor.find({bloodAmount:0,hospital: 'Hospital B'})
-        return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts,expiredBlood } });
-
+        // Return response
+        return res.json({ status: httpsStatusText.SUCCESS, data: { donorHospitalB, bloodAmounts: amounts, expiredBlood } });
     } catch (err) {
-        res.json({ status: httpsStatusText.ERROR, message: err.message });
+        return res.json({ status: httpsStatusText.ERROR, message: err.message });
     }
 };
 
 
 
-
-
-
-
-
-
-// get hospital C
-// const getDonorHospitalC = async(req,res) => {
-//     try{
-//         const donorC = await Donor.find({hospital:'Hospital C'},{"__v":false})
-//         res.json({status:httpsStatusText.SUCCESS,data:{donorC}})
-//     }catch(err){
-//         res.json({status:httpsStatusText.ERROR,message:err.message})
-//     }
-// };
 
 // const getDonorHospitalC = async (req, res) => {
 //     try {
@@ -422,16 +437,19 @@ const getDonorHospitalC = async (req, res) => {
         const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
 
         // Update records that exceeded 1 day since donation
-        await Donor.updateMany(
-            { hospital: 'Hospital C', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-            { $set: { bloodAmount: 0 } }
-        );
+        // await Donor.updateMany(
+        //     { hospital: 'Hospital A', date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+        //     { $set: { bloodAmount: 0 } }
+        // );
 
-        // Create an array of promises to get the total bloodAmount for each blood type
-        const promises = bloodTypes.map(async (type) => {
+        // Fetch total bloodAmount for each blood type
+        const amounts = await Promise.all(bloodTypes.map(async (type) => {
             const totalAmount = await Donor.aggregate([
                 {
-                    $match: { hospital: 'Hospital C', bloodType: type }
+                    $match: { hospital: 'Hospital C',
+                     bloodType: type,
+                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                    }
                 },
                 {
                     $group: {
@@ -440,19 +458,17 @@ const getDonorHospitalC = async (req, res) => {
                     }
                 }
             ]);
+            return { bloodType: type, totalAmount: totalAmount.length ? totalAmount[0].totalAmount : 0 };
+        }));
 
-            return { [type]: totalAmount.length ? totalAmount[0].totalAmount : 0 };
-        });
+        // Fetch all donors and expired blood
+        const donorHospitalC = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } , hospital: 'Hospital C' }, { "__v": false });
+        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }, hospital: 'Hospital C' });
 
-        // Wait for all promises to resolve
-        const amounts = await Promise.all(promises);
-
-        const donorA = await Donor.find({ hospital: 'Hospital C' }, { "__v": false });
-        const expiredBlood = await Donor.find({bloodAmount:0,hospital: 'Hospital C'})
-        return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts,expiredBlood } });
-
+        // Return response
+        return res.json({ status: httpsStatusText.SUCCESS, data: { donorHospitalC, bloodAmounts: amounts, expiredBlood } });
     } catch (err) {
-        res.json({ status: httpsStatusText.ERROR, message: err.message });
+        return res.json({ status: httpsStatusText.ERROR, message: err.message });
     }
 };
 
