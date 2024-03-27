@@ -18,13 +18,13 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN),
 
 // getAllpatient for three hospital =================>
 router.get("/getPatientA",verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.getPatientHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),patientController.getPatientHospitalA)
 
 router.get("/getPatientB",verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.getPatientHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),patientController.getPatientHospitalB)
 
 router.get("/getPatientC",verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.getPatientHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),patientController.getPatientHospitalC)
 
 
 

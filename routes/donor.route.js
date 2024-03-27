@@ -17,15 +17,15 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.addAllDonors)
 
 // Hospital A
 router.get('/getDonorHospitalA',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.getDonorHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),donorController.getDonorHospitalA)
 
 //Hospital B
 router.get('/getDonorHospitalB',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.getDonorHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),donorController.getDonorHospitalB)
 
 //Hospital C
 router.get('/getDonorHospitalC',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.getDonorHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),donorController.getDonorHospitalC)
 
 
 // update Donor Information 
