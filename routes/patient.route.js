@@ -11,46 +11,46 @@ const router = express.Router();
 
 // post AllPatient fo three Hospital
 router.post('/addPatiant',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),
+allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.ADMIN2,userRoles.ADMIN3),
     patientController.addAllpatient );
 
 
 
 // getAllpatient for three hospital =================>
 router.get("/getPatientA",verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),patientController.getPatientHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.USER),patientController.getPatientHospitalA)
 
 router.get("/getPatientB",verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),patientController.getPatientHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN2,userRoles.USER),patientController.getPatientHospitalB)
 
 router.get("/getPatientC",verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),patientController.getPatientHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN3,userRoles.USER),patientController.getPatientHospitalC)
 
 
 
 // update patient for three hospital
 router.patch('/updatePatientA/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.updatePatientHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1),patientController.updatePatientHospitalA)
 
 
 router.patch('/updatePatientB/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.updatePatientHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN2),patientController.updatePatientHospitalB)
 
 
 router.patch('/updatePatientC/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.updatePatientHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN3),patientController.updatePatientHospitalC)
 
 
 
 //Delete patient
 router.delete('/deletePatientA/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.deletePatientHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1),patientController.deletePatientHospitalA)
 
 router.delete('/deletePatientB/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.deletePatientHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN2),patientController.deletePatientHospitalB)
 
 router.delete('/deletePatientC/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),patientController.deletePatientHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN3),patientController.deletePatientHospitalC)
 
 
 

@@ -1,6 +1,9 @@
 const userRoles = {
-    ADMIN:"ADMIN",
+    ADMIN1:"ADMIN1",
+    ADMIN2:"ADMIN2",
+    ADMIN3:"ADMIN3",
     USER:"USER",
+    
     MANGER:'MANGER',
 }
 

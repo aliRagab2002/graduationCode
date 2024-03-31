@@ -14,12 +14,9 @@ const verifyToken = require("../middlewares/verfiyToken");
 const appError = require('../utils/appError')
 const httpsStatusText = require('../utils/httpsStatusText');
 const asyncwrapper = require('../middlewares/asyncwrapper')
+// const userRoles = require("../utils/userRoles")
 
 
-// const createToken = (_id)=>{
-//     const jwtSecretKey = process.env.JWT_SECRET_KEY;
-//     return jwt.sign({_id},jwtSecretKey,{expiresIn: "3d"});
-// }
 
 
 const transporter = nodemailer.createTransport({
@@ -163,6 +160,100 @@ const signup = (req, res) => {
 }
 
 
+// const signup = (req, res) => {
+//     const userRoles = {
+//         ADMIN: "ADMIN",
+//         ADMIN2: "ADMIN2",
+//         ADMIN3: "ADMIN3",
+//         USER: "USER",
+//         MANGER: 'MANGER',
+//     }
+//     let { fullName, email, password, role } = req.body;
+
+//     if (fullName == "" || email == "" || password == "" || role == "") {
+//         res.json({
+//             status: "FAILED",
+//             message: "Please provide all required fields, including a valid role."
+//         });
+//     } else if (!/^[a-zA-Z]*$/.test(fullName)) {
+//         res.json({
+//             status: "FAILED",
+//             message: "Please provide a valid name."
+//         });
+//     } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+//         res.json({
+//             status: "FAILED",
+//             message: "Please provide a valid email."
+//         });
+//     } else if (password.length < 8) {
+//         res.json({
+//             status: "FAILED",
+//             message: "Password is too short."
+//         });
+//     } else if (!Object.values(userRoles).includes(role)) {
+//         res.json({
+//             status: "FAILED",
+//             message: "Invalid role provided."
+//         });
+//     } else {
+//         User.find({ email })
+//             .then(result => {
+//                 if (result.length) {
+//                     res.json({
+//                         status: "FAILED",
+//                         message: "User already exists",
+//                         error: result.message
+//                     });
+//                 } else {
+//                     const saltRounds = 10;
+//                     bcrypt.hash(password, saltRounds).then(hashedpassword => {
+//                         const newUser = new User({
+//                             fullName,
+//                             email,
+//                             password: hashedpassword,
+//                             role,
+//                             verified: false
+//                         });
+
+//                         const token = generateJWT({ email: newUser.email, id: newUser._id, role: newUser.role });
+//                         newUser.token = token;
+
+//                         newUser.save().then(result => {
+//                             sendVerificationEmail(result, res);
+//                         }).catch(err => {
+//                             res.json({
+//                                 status: "FAILED",
+//                                 message: "An error occurred while registering user.",
+//                                 error: err.message
+//                             });
+//                         });
+
+//                     }).catch(err => {
+//                         res.json({
+//                             status: "FAILED",
+//                             message: "An error occurred while hashing password."
+//                         });
+//                     });
+//                 }
+//             })
+//             .catch(err => {
+//                 res.json({
+//                     status: "FAILED",
+//                     message: "Error occurred while searching for users."
+//                 });
+//             });
+//     }
+// };
+
+
+
+
+
+
+
+
+
+
 
 
 const sendVerificationEmail = ({_id,email},res)=>{
@@ -303,112 +394,203 @@ const verifyEmail =(req,res)=>{
 // login 
 
 
-const signin = (req,res) => {
-    let {email,password} = req.body;
-    email = email.trim();
-    password = password.trim();
+// const signin = (req,res) => {
+//     let {email,password} = req.body;
+//     email = email.trim();
+//     password = password.trim();
 
-    if(email == "" || password == ""){
-        res.json({
-            status:"FALIED",
-            message:"Please enter your email address"
+//     if(email == "" || password == ""){
+//         res.json({
+//             status:"FALIED",
+//             message:"Please enter your email address"
 
-        })
+//         })
 
-    }else{
-        User.find({email:email})
-        .then(data =>{
-            if(data.length){
+//     }else{
+//         User.find({email:email})
+//         .then(data =>{
+//             if(data.length){
 
-                if(!data[0].verified){
-                    res.json({
-                        status:"FALIED",
-                        message:"Email has not been verified check your inbox"
-                    })
-                }else{
-                    const hashedPassword = data[0].password
-                    bcrypt.compare(password,hashedPassword)
-                    .then(result =>{
-                        if(result){
+//                 if(!data[0].verified){
+//                     res.json({
+//                         status:"FALIED",
+//                         message:"Email has not been verified check your inbox"
+//                     })
+//                 }else{
+//                     const hashedPassword = data[0].password
+//                     bcrypt.compare(password,hashedPassword)
+//                     .then(result =>{
+//                         if(result){
 
                             
-                            const token = generateJWT({email: data[0].email, id: data[0].id, role: data[0].role});
-                            res.json({
-                                status: "SUCCESS",
-                                message: "signing successful",
-                                data: {token, role: data[0].role,email: data[0].email}
-                            });
-                        }else{
-                            res.json({
-                            status:"FALIED",
-                            message:"invalid password"
-                        })
-                    }
-                })
-                    .catch(error=>{
+//                             const token = generateJWT({email: data[0].email, id: data[0].id, role: data[0].role});
+//                             res.json({
+//                                 status: "SUCCESS",
+//                                 message: "signing successful",
+//                                 data: {token, role: data[0].role,email: data[0].email}
+//                             });
+//                         }else{
+//                             res.json({
+//                             status:"FALIED",
+//                             message:"invalid password"
+//                         })
+//                     }
+//                 })
+//                     .catch(error=>{
                     
-                        res.json({
-                            status:"FALIED",
-                            message:"an error occured while comparing the password"
-                        })
+//                         res.json({
+//                             status:"FALIED",
+//                             message:"an error occured while comparing the password"
+//                         })
      
-                    })
+//                     })
                     
 
-                }
+//                 }
 
 
 
 
-            }else{
-                console.log(err)
-                res.json({
-                    status:"FALIED",
-                    message:"invalid credentials entered!"
-                })
-            }
+//             }else{
+//                 console.log(err)
+//                 res.json({
+//                     status:"FALIED",
+//                     message:"invalid credentials entered!"
+//                 })
+//             }
 
             
 
-        })
-        .catch(error=>{
-            res.json({
-                status:"FALIED",
-                message:"An error occurred while checking for existing user  "
+//         })
+//         .catch(error=>{
+//             res.json({
+//                 status:"FALIED",
+//                 message:"An error occurred while checking for existing user  "
+//             })
+//         })
+//     }
+// }
+
+
+
+
+const signin = (req, res) => {
+    let { email, password } = req.body;
+    email = email.trim();
+    password = password.trim();
+
+    if (email == "" || password == "") {
+        res.json({
+            status: "FAILED",
+            message: "Please enter your email address"
+        });
+    } else {
+        User.findOne({ email: email })
+            .then(data => {
+                if (data) {
+                    if (!data.verified) {
+                        res.json({
+                            status: "FAILED",
+                            message: "Email has not been verified, please check your inbox"
+                        });
+                    } else {
+                        const hashedPassword = data.password;
+                        bcrypt.compare(password, hashedPassword)
+                            .then(result => {
+                                if (result) {
+                                    // Update loggedIn status to true
+                                    User.findByIdAndUpdate(data._id, { loggedIn: true })
+                                        .then(updatedUser => {
+                                            // Generate JWT token
+                                            const token = generateJWT({ email: updatedUser.email, id: updatedUser._id, role: updatedUser.role });
+                                            res.json({
+                                                status: "SUCCESS",
+                                                message: "Signing in successful",
+                                                data: { token, role: updatedUser.role, email: updatedUser.email }
+                                            });
+                                        })
+                                        .catch(error => {
+                                            res.json({
+                                                status: "FAILED",
+                                                message: "An error occurred while updating user data"
+                                            });
+                                        });
+                                } else {
+                                    res.json({
+                                        status: "FAILED",
+                                        message: "Invalid password"
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                res.json({
+                                    status: "FAILED",
+                                    message: "An error occurred while comparing the password"
+                                });
+                            });
+                    }
+                } else {
+                    res.json({
+                        status: "FAILED",
+                        message: "Invalid credentials entered"
+                    });
+                }
             })
-        })
+            .catch(error => {
+                res.json({
+                    status: "FAILED",
+                    message: "An error occurred while checking for existing user"
+                });
+            });
     }
-}
+};
 
 
-// const login = asyncwrapper (async (req, res, next) => {
-//     const {email, password} = req.body
 
-//     if(!email && !password){
-//         const error = appError.create('provide email and password',400, httpsStatusText.FAIL)
-//         return next(error)
-//     }
 
-//     const user = await User.find({email: email})
 
-//     if(!user){
-//         const error = appError.create('user not found',400, httpsStatusText.ERROR)
-//         return next(error)
-//     }
 
-//     const matchedPassword = await bcrypt.compare(password, user.password)
 
-//     if(user && matchedPassword){
-//         const token = await generateJWT({email: user.email, id: user.id, role: user.role})
 
-//         return res.status(200).json({stauts: httpsStatusText.SUCCESS, data:{token,role: user.role}})
-//     } else {
-//         const error = appError.create('invalid email or password',500, httpsStatusText.ERROR)
-//         return next(error)
+const logout = async (req, res) => {
+    try {
+        
+        if (!req.headers.authorization) {
+            return res.status(401).json({
+                status: "FAILED",
+                message: "Token missing"
+            });
+        }
 
-//     }
-// })
+        
+        const token = req.headers.authorization.split(' ')[1];
 
+        
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        if (!decodedToken) {
+            return res.status(401).json({
+                status: "FAILED",
+                message: "Invalid token"
+            });
+        }
+
+        
+        await User.findByIdAndUpdate(decodedToken.id, { loggedIn: false });
+
+        
+        res.json({
+            status: "SUCCESS",
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        
+        console.error(error);
+        res.status(500).json({
+            status: "FAILED",
+            message: "An error occurred while logging out"
+        });
+    }
+};
 
 
 
@@ -417,5 +599,6 @@ module.exports = {
     signup,
     sendVerificationEmail,
     verifyEmail,
-    signin
+    signin,
+    logout
 };

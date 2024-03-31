@@ -24,9 +24,14 @@ password: {
 token:{
     type:String
 },
+loggedIn:{
+    type:Boolean,
+    default:false
+
+},
 role:{
     type: String,
-    enum: [userRoles.USER, userRoles.ADMIN, userRoles.MANGER],
+    enum: [userRoles.USER, userRoles.ADMIN1,userRoles.ADMIN2,userRoles.ADMIN3, userRoles.MANGER],
     default: userRoles.USER
 },
 verified : {

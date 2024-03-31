@@ -9,7 +9,7 @@ const router = express.Router();
 
 // post AllDonor for three Hospital
 router.post('/addAllDonor',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.addAllDonors)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.ADMIN2,userRoles.ADMIN3),donorController.addAllDonors)
 
 
 
@@ -17,31 +17,31 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.addAllDonors)
 
 // Hospital A
 router.get('/getDonorHospitalA',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),donorController.getDonorHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.USER),donorController.getDonorHospitalA)
 
 //Hospital B
 router.get('/getDonorHospitalB',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),donorController.getDonorHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN2,userRoles.USER),donorController.getDonorHospitalB)
 
 //Hospital C
 router.get('/getDonorHospitalC',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN,userRoles.USER),donorController.getDonorHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN3,userRoles.USER),donorController.getDonorHospitalC)
 
 
 // update Donor Information 
 // Hospital A Information 
 router.patch('/updateDonorHospitalA/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.updateDonorHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1),donorController.updateDonorHospitalA)
 
 
 // Hospital B Information
 router.patch('/updateDonorHospitalB/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.updateDonorHospitalB);
+allowedTo(userRoles.MANGER,userRoles.ADMIN2),donorController.updateDonorHospitalB);
 
 
 // Hospital C Information
 router.patch('/updateDonorHospitalC/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.updateDonorHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN3),donorController.updateDonorHospitalC)
 
 
 
@@ -50,17 +50,17 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.updateDonorHospitalC
 
 //Hospital A
 router.delete('/deleteDonorHospitalA/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.deleteDonorHospitalA)
+allowedTo(userRoles.MANGER,userRoles.ADMIN1),donorController.deleteDonorHospitalA)
 
 
 //Hospital B
 router.delete('/deleteDonorHospitalB/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.deleteDonorHospitalB)
+allowedTo(userRoles.MANGER,userRoles.ADMIN2),donorController.deleteDonorHospitalB)
 
 
 //Hospital C
 router.delete('/deleteDonorHospitalC/:id',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN),donorController.deleteDonorHospitalC)
+allowedTo(userRoles.MANGER,userRoles.ADMIN3),donorController.deleteDonorHospitalC)
 
 
 

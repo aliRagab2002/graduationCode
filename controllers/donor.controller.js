@@ -281,7 +281,7 @@ const addAllDonors = async (req, res, next) => {
 
 const getDonorHospitalA = async (req, res) => {
     try {
-        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
+        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
         // Update records that exceeded 1 day since donation
         // await Donor.updateMany(
@@ -359,7 +359,7 @@ const getDonorHospitalA = async (req, res) => {
 
 const getDonorHospitalB = async (req, res) => {
     try {
-        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
+        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
         // Update records that exceeded 1 day since donation
         // await Donor.updateMany(
@@ -434,7 +434,7 @@ const getDonorHospitalB = async (req, res) => {
 
 const getDonorHospitalC = async (req, res) => {
     try {
-        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'e'];
+        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
         // Update records that exceeded 1 day since donation
         // await Donor.updateMany(
