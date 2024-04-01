@@ -506,7 +506,7 @@ const signin = (req, res) => {
                                             res.json({
                                                 status: "SUCCESS",
                                                 message: "Signing in successful",
-                                                data: { token, role: updatedUser.role, email: updatedUser.email }
+                                                data: { token, role: updatedUser.role, email: updatedUser.email,loggedIn: updatedUser.loggedIn }
                                             });
                                         })
                                         .catch(error => {
@@ -554,18 +554,13 @@ const signin = (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        
         if (!req.headers.authorization) {
             return res.status(401).json({
                 status: "FAILED",
                 message: "Token missing"
             });
         }
-
-        
         const token = req.headers.authorization.split(' ')[1];
-
-        
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
         if (!decodedToken) {
             return res.status(401).json({
@@ -573,17 +568,12 @@ const logout = async (req, res) => {
                 message: "Invalid token"
             });
         }
-
-        
         await User.findByIdAndUpdate(decodedToken.id, { loggedIn: false });
-
-        
         res.json({
             status: "SUCCESS",
             message: "Logged out successfully"
         });
     } catch (error) {
-        
         console.error(error);
         res.status(500).json({
             status: "FAILED",
