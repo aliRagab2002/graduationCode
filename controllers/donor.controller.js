@@ -2,6 +2,8 @@
 const Donor = require('../models/donor.models')
 const asyncwrapper = require('../middlewares/asyncwrapper')
 const httpsStatusText = require('../utils/httpsStatusText')
+const DeleteDonors = require('../models/deleteDoner.model')
+
 
 const moment = require('moment');
 
@@ -61,7 +63,7 @@ const addAllDonors = async (req, res, next) => {
             if (!donor) {
                 const donorA = new Donor(req.body);
                 await donorA.save();
-                res.send(donorA);
+                return res.send(donorA);
                 // If there are no previous donations
                 next(); // The person can donate for the first time
             } else {
@@ -71,7 +73,7 @@ const addAllDonors = async (req, res, next) => {
                 if (lastDonationDate.isBefore(sixMonthsAgo)) {
                     const donorA = new Donor(req.body);
                      donorA.save();
-                    res.send(donorA);
+                    return res.send(donorA);
                     // If the last donation was at least 6 months ago
                     next(); // The person can donate
                 } else {
@@ -295,7 +297,7 @@ const getDonorHospitalA = async (req, res) => {
                 {
                     $match: { hospital: 'Hospital A',
                      bloodType: type,
-                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) }
                     }
                 },
                 {
@@ -309,8 +311,8 @@ const getDonorHospitalA = async (req, res) => {
         }));
 
         // Fetch all donors and expired blood
-        const donorA = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } , hospital: 'Hospital A' }, { "__v": false });
-        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }, hospital: 'Hospital A' });
+        const donorA = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) }, hospital: 'Hospital A' }, { "__v": false });
+        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) }, hospital: 'Hospital A' });
 
         // Return response
         return res.json({ status: httpsStatusText.SUCCESS, data: { donorA, bloodAmounts: amounts, expiredBlood } });
@@ -544,20 +546,76 @@ const updateDonorHospitalC = async(req,res) => {
 
 
 // delete info donor hospital A
+// const deleteDonorHospitalA = async(req,res) => {
+    
+//         try{
+//             const _id = req.params.id
+//             const deleteDonor = await Donor.findByIdAndDelete(_id)
+//             if(!deleteDonor){
+//                 return res.status(400).json({
+//                     message:httpsStatusText.FAIL,data:{message:"Donor not found"}
+//                 })
+//             } res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
+//         }catch(e){
+//             res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+//         }
+// };
+
 const deleteDonorHospitalA = async(req,res) => {
     
-        try{
-            const _id = req.params.id
-            const deleteDonor = await Donor.findByIdAndDelete(_id)
-            if(!deleteDonor){
-                return res.status(400).json({
-                    message:httpsStatusText.FAIL,data:{message:"Donor not found"}
-                })
-            } res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
-        }catch(e){
-            res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+    try{
+        
+        const _id = req.params.id
+        const deleteDonor = await Donor.findByIdAndDelete(_id)
+        
+        
+        if(!deleteDonor){
+            return res.status(400).json({
+                message:httpsStatusText.FAIL,data:{message:"Donor not found"}
+            })
         }
+
+        const deletedDonor = new DeleteDonors({
+            fullName: deleteDonor.fullName,
+            phoneNumber: deleteDonor.phoneNumber,
+            age: deleteDonor.age,
+            city: deleteDonor.city,
+            bloodAmount: deleteDonor.bloodAmount,
+            bloodType: deleteDonor.bloodType,
+            hospital: deleteDonor.hospital,
+            gender: deleteDonor.gender,
+            date: deleteDonor.date,
+            code: deleteDonor.code
+        });
+        
+        await deletedDonor.save();
+        
+        
+        
+        res.json({success:httpsStatusText.SUCCESS,data:{deletedDonor}})
+    }catch(e){
+        res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+    }
 };
+
+const getDonorDeleteHospitalA = async(req, res) => {
+    try{
+
+        const deleteDonor = await DeleteDonors.find();
+        if(!deleteDonor){
+            return res.status(400).json({
+                message:httpsStatusText.FAIL,data:{message:"Error to get information DeleteDonors"}
+            })
+        }
+        res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
+
+    }
+    catch(e){
+        res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+    }
+};
+
+
 
 
 // delete info donor hospital B
@@ -607,4 +665,5 @@ module.exports = {
     deleteDonorHospitalA,
     deleteDonorHospitalB,
     deleteDonorHospitalC,
+    getDonorDeleteHospitalA
 }

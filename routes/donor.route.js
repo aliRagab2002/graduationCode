@@ -19,6 +19,9 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.ADMIN2,userRoles.ADMIN3),d
 router.get('/getDonorHospitalA',verifyToken, 
 allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.USER),donorController.getDonorHospitalA)
 
+router.get('/getDonorDeleteHospitalA',verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.USER),donorController.getDonorDeleteHospitalA)
+
 //Hospital B
 router.get('/getDonorHospitalB',verifyToken, 
 allowedTo(userRoles.MANGER,userRoles.ADMIN2,userRoles.USER),donorController.getDonorHospitalB)

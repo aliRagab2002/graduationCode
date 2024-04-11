@@ -47,6 +47,16 @@ const donorSchema = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
+    code: {
+        type: String,
+        default: function() {
+          const currentDate = new Date();
+          const expiredPriod = new Date(currentDate.setDate(currentDate.getDate() + 42));
+          const isoDate = expiredPriod.toISOString();
+          return 'start: '+ this.date.toISOString().slice(2,4) +'/'+ this.date.toISOString().slice(5,7)+'/'+
+          + this.date.toISOString().slice(8,10)+ '\nexpired: ' + isoDate.slice(2, 4) + '/'
+          + isoDate.slice(5, 7) + '/' + isoDate.slice(8, 10) + '\nType: '+ this.bloodType + isoDate.slice(0,10)
+      }}
 
 
 
