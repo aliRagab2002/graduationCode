@@ -19,8 +19,7 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.ADMIN2,userRoles.ADMIN3),d
 router.get('/getDonorHospitalA',verifyToken, 
 allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.USER),donorController.getDonorHospitalA)
 
-router.get('/getDonorDeleteHospitalA',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.USER),donorController.getDonorDeleteHospitalA)
+
 
 //Hospital B
 router.get('/getDonorHospitalB',verifyToken, 
@@ -29,6 +28,31 @@ allowedTo(userRoles.MANGER,userRoles.ADMIN2,userRoles.USER),donorController.getD
 //Hospital C
 router.get('/getDonorHospitalC',verifyToken, 
 allowedTo(userRoles.MANGER,userRoles.ADMIN3,userRoles.USER),donorController.getDonorHospitalC)
+
+
+
+
+
+
+//get info DeletedDonor
+
+router.get('/getAllDonorDeleted',verifyToken, 
+allowedTo(userRoles.MANGER),donorController.getAllDonorDeleted)
+
+router.get('/getDonorDeleteHospitalA',verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN1),donorController.getDonorDeleteHospitalA)
+
+router.get('/getDonorDeleteHospitalB',verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN2),donorController.getDonorDeleteHospitalB)
+
+router.get('/getDonorDeleteHospitalC',verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN3),donorController.getDonorDeleteHospitalC)
+
+
+
+
+
+
 
 
 // update Donor Information 

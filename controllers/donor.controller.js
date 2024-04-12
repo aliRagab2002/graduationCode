@@ -375,7 +375,7 @@ const getDonorHospitalB = async (req, res) => {
                 {
                     $match: { hospital: 'Hospital B',
                      bloodType: type,
-                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) }
                     }
                 },
                 {
@@ -389,8 +389,8 @@ const getDonorHospitalB = async (req, res) => {
         }));
 
         // Fetch all donors and expired blood
-        const donorHospitalB = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } , hospital: 'Hospital B' }, { "__v": false });
-        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }, hospital: 'Hospital B' });
+        const donorHospitalB = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) } , hospital: 'Hospital B' }, { "__v": false });
+        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) }, hospital: 'Hospital B' });
 
         // Return response
         return res.json({ status: httpsStatusText.SUCCESS, data: { donorHospitalB, bloodAmounts: amounts, expiredBlood } });
@@ -450,7 +450,7 @@ const getDonorHospitalC = async (req, res) => {
                 {
                     $match: { hospital: 'Hospital C',
                      bloodType: type,
-                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                     date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) }
                     }
                 },
                 {
@@ -464,8 +464,8 @@ const getDonorHospitalC = async (req, res) => {
         }));
 
         // Fetch all donors and expired blood
-        const donorHospitalC = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } , hospital: 'Hospital C' }, { "__v": false });
-        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }, hospital: 'Hospital C' });
+        const donorHospitalC = await Donor.find({date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 * 42) } , hospital: 'Hospital C' }, { "__v": false });
+        const expiredBlood = await Donor.find({ date: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000 *42) }, hospital: 'Hospital C' });
 
         // Return response
         return res.json({ status: httpsStatusText.SUCCESS, data: { donorHospitalC, bloodAmounts: amounts, expiredBlood } });
@@ -598,7 +598,90 @@ const deleteDonorHospitalA = async(req,res) => {
     }
 };
 
-const getDonorDeleteHospitalA = async(req, res) => {
+
+
+
+
+
+// delete info donor hospital B
+const deleteDonorHospitalB = async(req,res) => {
+    
+    try{
+        
+        const _id = req.params.id
+        const deleteDonor = await Donor.findByIdAndDelete(_id)
+        
+        
+        if(!deleteDonor){
+            return res.status(400).json({
+                message:httpsStatusText.FAIL,data:{message:"Donor not found"}
+            })
+        }
+
+        const deletedDonor = new DeleteDonors({
+            fullName: deleteDonor.fullName,
+            phoneNumber: deleteDonor.phoneNumber,
+            age: deleteDonor.age,
+            city: deleteDonor.city,
+            bloodAmount: deleteDonor.bloodAmount,
+            bloodType: deleteDonor.bloodType,
+            hospital: deleteDonor.hospital,
+            gender: deleteDonor.gender,
+            date: deleteDonor.date,
+            code: deleteDonor.code
+        });
+        
+        await deletedDonor.save();
+        
+        
+        
+        res.json({success:httpsStatusText.SUCCESS,data:{deletedDonor}})
+    }catch(e){
+        res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+    }
+};
+
+// delete info donor hospital C
+const deleteDonorHospitalC = async(req,res) => {
+    
+    try{
+        
+        const _id = req.params.id
+        const deleteDonor = await Donor.findByIdAndDelete(_id)
+        
+        
+        if(!deleteDonor){
+            return res.status(400).json({
+                message:httpsStatusText.FAIL,data:{message:"Donor not found"}
+            })
+        }
+
+        const deletedDonor = new DeleteDonors({
+            fullName: deleteDonor.fullName,
+            phoneNumber: deleteDonor.phoneNumber,
+            age: deleteDonor.age,
+            city: deleteDonor.city,
+            bloodAmount: deleteDonor.bloodAmount,
+            bloodType: deleteDonor.bloodType,
+            hospital: deleteDonor.hospital,
+            gender: deleteDonor.gender,
+            date: deleteDonor.date,
+            code: deleteDonor.code
+        });
+        
+        await deletedDonor.save();
+        
+        
+        
+        res.json({success:httpsStatusText.SUCCESS,data:{deletedDonor}})
+    }catch(e){
+        res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+    }
+};
+
+// get info DeletedDonor
+
+const getAllDonorDeleted = async(req, res) => {
     try{
 
         const deleteDonor = await DeleteDonors.find();
@@ -617,39 +700,62 @@ const getDonorDeleteHospitalA = async(req, res) => {
 
 
 
-
-// delete info donor hospital B
-const deleteDonorHospitalB = async(req,res) => {
-   
+const getDonorDeleteHospitalA = async(req, res) => {
     try{
-        const _id = req.params.id
-        const deleteDonor = await Donor.findByIdAndDelete(_id)
+
+        const deleteDonor = await DeleteDonors.find({hospital: "Hospital A"});
         if(!deleteDonor){
             return res.status(400).json({
-                message:httpsStatusText.FAIL,data:{message:"Donor not found"}
+                message:httpsStatusText.FAIL,data:{message:"Error to get information DeleteDonors"}
             })
-        } res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
-    }catch(e){
+        }
+        res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
+
+    }
+    catch(e){
         res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
     }
 };
 
 
-// delete info donor hospital C
-const deleteDonorHospitalC = async(req,res) => {
 
+const getDonorDeleteHospitalB = async(req, res) => {
     try{
-        const _id = req.params.id
-        const deleteDonor = await Donor.findByIdAndDelete(_id)
+
+        const deleteDonor = await DeleteDonors.find({hospital : "Hospital B"});
         if(!deleteDonor){
             return res.status(400).json({
-                message:httpsStatusText.FAIL,data:{message:"Donor not found"}
+                message:httpsStatusText.FAIL,data:{message:"Error to get information DeleteDonors"}
             })
-        } res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
-    }catch(e){
+        }
+        res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
+
+    }
+    catch(e){
         res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
     }
 };
+
+
+
+const getDonorDeleteHospitalC = async(req, res) => {
+    try{
+
+        const deleteDonor = await DeleteDonors.find({hospital : "Hospital C"});
+        if(!deleteDonor){
+            return res.status(400).json({
+                message:httpsStatusText.FAIL,data:{message:"Error to get information DeleteDonors"}
+            })
+        }
+        res.json({success:httpsStatusText.SUCCESS,data:{deleteDonor}})
+
+    }
+    catch(e){
+        res.status(401).json({success:httpsStatusText.ERROR,data:null,message:e.message,code:401})
+    }
+};
+
+
 
 
 
@@ -665,5 +771,8 @@ module.exports = {
     deleteDonorHospitalA,
     deleteDonorHospitalB,
     deleteDonorHospitalC,
-    getDonorDeleteHospitalA
+    getAllDonorDeleted,
+    getDonorDeleteHospitalA,
+    getDonorDeleteHospitalB,
+    getDonorDeleteHospitalC
 }
