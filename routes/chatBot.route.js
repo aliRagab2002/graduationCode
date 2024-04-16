@@ -6,8 +6,6 @@ const allowedTo = require('../middlewares/allowedTo');
 
 const router = express.Router();
 
-router.post('/searchByBloodType',verifyToken, 
-allowedTo(userRoles.MANGER,userRoles.ADMIN1,userRoles.ADMIN2,userRoles.ADMIN3,userRoles.USER),
-chatBotController.chatBot )
+router.post('/searchByBloodType',chatBotController.chatBot )
 
 module.exports = router

@@ -13,7 +13,7 @@ const chatBot = async (req, res) => {
         const selectedBloodType = req.body.selectedBloodType;
 
     
-        const results = await Donor.find({ bloodType: selectedBloodType }).maxTimeMS(30000);
+        const results = await Donor.find({ bloodType: selectedBloodType, date: { $gte: new Date(Date.now() - 8 * 60 * 60 * 1000 ) } }, { "__v": false }).maxTimeMS(30000);
 
         
         const totalBloodAmount = results.reduce((total, donor) => {
