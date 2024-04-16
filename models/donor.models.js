@@ -51,7 +51,7 @@ const donorSchema = new mongoose.Schema({
         type: String,
         default: function() {
           const currentDate = new Date();
-          const expiredPriod = new Date(currentDate.setDate(currentDate.getDate() + 8 * 60 * 60 * 1000));
+          const expiredPriod = new Date(currentDate.setDate(currentDate.getDate() + 24 * 60 * 60 * 1000));
           const isoDate = expiredPriod.toISOString();
           return 'start: '+ this.date.toISOString().slice(2,4) +'/'+ this.date.toISOString().slice(5,7)+'/'+
           + this.date.toISOString().slice(8,10)+ '\nexpired: ' + isoDate.slice(2, 4) + '/'
