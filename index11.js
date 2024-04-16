@@ -27,6 +27,9 @@ app.use('/api',donorRouter)
 const userRoutes = require('./routes/user.route')
 app.use('/api',userRoutes)
 
+const chatBot = require('./routes/chatBot.route')
+app.use('/api',chatBot)
+
 
 
 app.all('*',(req ,res , next) => {

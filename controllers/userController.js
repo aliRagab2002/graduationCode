@@ -585,10 +585,13 @@ const logout = async (req, res) => {
 
 
 
+
+
 module.exports = {
     signup,
     sendVerificationEmail,
     verifyEmail,
     signin,
-    logout
+    logout,
+    
 };
