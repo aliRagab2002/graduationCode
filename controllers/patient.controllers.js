@@ -1,6 +1,6 @@
 const asyncwrapper = require('../middlewares/asyncwrapper')
 const Patient = require("../models/patient.model")
-
+const Donor = require('../models/donor.models')
 const httpsStatusText = require('../utils/httpsStatusText')
 const appError = require('../utils/appError')
 const { model } = require('mongoose')
@@ -220,6 +220,127 @@ const deletePatientHospitalC = async(req, res)=>{
 };
 
 
+const getBloodHospitalA = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const infoPatient = await Patient.findById(_id);
+        
+        if (!infoPatient) {
+            return res.status(404).json({ message: "Patient not found" });
+        }
+
+        // Find donors matching the criteria and sort them by bloodAmount in descending order
+        const donors = await Donor.find({ 
+            hospital: 'Hospital A',
+            bloodType: infoPatient.bloodType,
+            date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 ) }
+        }).sort({ bloodAmount: -1 });
+
+        // Initialize the remaining blood amount needed
+        let remainingBloodAmount = infoPatient.bloodAmount;
+
+        // Iterate through donors and deduct blood amount from each one until the required amount is fulfilled
+        for (const donor of donors) {
+            if (remainingBloodAmount <= 0) break; // Exit loop if the required amount is fulfilled
+            const amountToDeduct = Math.min(remainingBloodAmount, donor.bloodAmount);
+            await Donor.findByIdAndUpdate(donor._id, { $inc: { bloodAmount: -amountToDeduct } });
+            remainingBloodAmount -= amountToDeduct;
+        }
+
+        if (remainingBloodAmount > 0) {
+            return res.status(400).json({ message: "Insufficient blood amount available" });
+        }
+
+        return res.status(200).json({ message: "Blood amount deducted successfully" });
+
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+const getBloodHospitalB = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const infoPatient = await Patient.findById(_id);
+        
+        if (!infoPatient) {
+            return res.status(404).json({ message: "Patient not found" });
+        }
+
+        // Find donors matching the criteria and sort them by bloodAmount in descending order
+        const donors = await Donor.find({ 
+            hospital: 'Hospital B',
+            bloodType: infoPatient.bloodType,
+            date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 ) }
+        }).sort({ bloodAmount: -1 });
+
+        // Initialize the remaining blood amount needed
+        let remainingBloodAmount = infoPatient.bloodAmount;
+
+        // Iterate through donors and deduct blood amount from each one until the required amount is fulfilled
+        for (const donor of donors) {
+            if (remainingBloodAmount <= 0) break; // Exit loop if the required amount is fulfilled
+            const amountToDeduct = Math.min(remainingBloodAmount, donor.bloodAmount);
+            await Donor.findByIdAndUpdate(donor._id, { $inc: { bloodAmount: -amountToDeduct } });
+            remainingBloodAmount -= amountToDeduct;
+        }
+
+        if (remainingBloodAmount > 0) {
+            return res.status(400).json({ message: "Insufficient blood amount available" });
+        }
+
+        return res.status(200).json({ message: "Blood amount deducted successfully" });
+
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+const getBloodHospitalC = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const infoPatient = await Patient.findById(_id);
+        
+        if (!infoPatient) {
+            return res.status(404).json({ message: "Patient not found" });
+        }
+
+        // Find donors matching the criteria and sort them by bloodAmount in descending order
+        const donors = await Donor.find({ 
+            hospital: 'Hospital C',
+            bloodType: infoPatient.bloodType,
+            date: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000 ) }
+        }).sort({ bloodAmount: -1 });
+
+        // Initialize the remaining blood amount needed
+        let remainingBloodAmount = infoPatient.bloodAmount;
+
+        // Iterate through donors and deduct blood amount from each one until the required amount is fulfilled
+        for (const donor of donors) {
+            if (remainingBloodAmount <= 0) break; // Exit loop if the required amount is fulfilled
+            const amountToDeduct = Math.min(remainingBloodAmount, donor.bloodAmount);
+            await Donor.findByIdAndUpdate(donor._id, { $inc: { bloodAmount: -amountToDeduct } });
+            remainingBloodAmount -= amountToDeduct;
+        }
+
+        if (remainingBloodAmount > 0) {
+            return res.status(400).json({ message: "Insufficient blood amount available" });
+        }
+
+        return res.status(200).json({ message: "Blood amount deducted successfully" });
+
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+
 
 
 
@@ -235,7 +356,10 @@ module.exports={
     deletePatientHospitalC,
     updatePatientHospitalA,
     updatePatientHospitalB,
-    updatePatientHospitalC
+    updatePatientHospitalC,
+    getBloodHospitalA,
+    getBloodHospitalB,
+    getBloodHospitalC
 
 
 }

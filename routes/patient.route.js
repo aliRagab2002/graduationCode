@@ -53,6 +53,18 @@ router.delete('/deletePatientC/:id',verifyToken,
 allowedTo(userRoles.MANGER,userRoles.ADMIN3),patientController.deletePatientHospitalC)
 
 
+router.get('/getBloodHospitalA/:id',verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN1)
+,patientController.getBloodHospitalA)
+
+router.get('/getBloodHospitalB/:id',verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN2),patientController.getBloodHospitalB)
+
+router.get('/getBloodHospitalC/:id',
+verifyToken, 
+allowedTo(userRoles.MANGER,userRoles.ADMIN3),patientController.getBloodHospitalC)
+
+
 
 
 
