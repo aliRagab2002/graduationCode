@@ -6,6 +6,9 @@ const allowedTo = require('../middlewares/allowedTo');
 
 const router = express.Router();
 
+
+router.post('/nearestPlace',chatBotController.nearestPlace)
+
 router.post('/searchByBloodType',chatBotController.chatBot )
 
 module.exports = router
