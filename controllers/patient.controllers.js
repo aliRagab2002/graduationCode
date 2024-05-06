@@ -251,6 +251,9 @@ const getBloodHospitalA = async (req, res) => {
             return res.status(400).json({ message: "Insufficient blood amount available" });
         }
 
+        // Update patient's blood amount to zero
+        await Patient.findByIdAndUpdate(_id, { $set: { bloodAmount: 0 } });
+
         return res.status(200).json({ message: "Blood amount deducted successfully" });
 
     } catch (error) {
@@ -258,6 +261,7 @@ const getBloodHospitalA = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 
 const getBloodHospitalB = async (req, res) => {
@@ -290,6 +294,9 @@ const getBloodHospitalB = async (req, res) => {
         if (remainingBloodAmount > 0) {
             return res.status(400).json({ message: "Insufficient blood amount available" });
         }
+
+        // Update patient's blood amount to zero
+        await Patient.findByIdAndUpdate(_id, { $set: { bloodAmount: 0 } });
 
         return res.status(200).json({ message: "Blood amount deducted successfully" });
 
@@ -329,6 +336,9 @@ const getBloodHospitalC = async (req, res) => {
         if (remainingBloodAmount > 0) {
             return res.status(400).json({ message: "Insufficient blood amount available" });
         }
+
+        // Update patient's blood amount to zero
+        await Patient.findByIdAndUpdate(_id, { $set: { bloodAmount: 0 } });
 
         return res.status(200).json({ message: "Blood amount deducted successfully" });
 
