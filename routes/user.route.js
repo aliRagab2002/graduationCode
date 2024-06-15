@@ -9,7 +9,7 @@ router.get('/verify/:userId/:uniqueString',userController.verifyEmail)
 router.post('/signin',userController.signin)
 router.post('/logout',userController.logout)
 router.post('/forgetPassword',forgetpassword.forgetPassword)
-router.post('/restPassword',forgetpassword.restPassword)
+router.post('/restPassword/:token',forgetpassword.restPassword)
 
 
 

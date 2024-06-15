@@ -30,6 +30,9 @@ app.use('/api',userRoutes)
 const chatBot = require('./routes/chatBot.route')
 app.use('/api',chatBot)
 
+const contectUs = require('./routes/contectUs.route')
+app.use('/api',contectUs)
+
 
 
 app.all('*',(req ,res , next) => {

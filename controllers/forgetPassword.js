@@ -42,6 +42,7 @@ const forgetPassword = async (req, res) => {
         subject: 'Password Reset',
         html: `<p>Please click on the following link to reset your password:</p><p><a href="https://aliragab752001-b5a2994d54c4.herokuapp.com/restPassword/${token}">Reset Password</a></p>`
     };
+    console.log(mailOptions)
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -55,7 +56,8 @@ const forgetPassword = async (req, res) => {
 
 // Endpoint to handle password reset
 const restPassword =  async (req, res) => {
-    const { token, newPassword } = req.body;
+    const token = req.params.token;
+    const { newPassword } = req.body;
 
     try {
         // Verify the token

@@ -82,9 +82,7 @@ transporter.verify((error,success) => {
 
 const signup = (req, res) => {
     let {fullName , email , password,role} = req.body;
-    // name = name.trim();
-    // email = email.trim();
-    // password = password.trim();
+
     if(fullName == ""||email == ""||password == ""){
         res.json({
             status:"FAILED",
