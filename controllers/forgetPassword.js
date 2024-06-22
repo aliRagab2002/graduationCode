@@ -40,7 +40,7 @@ const forgetPassword = async (req, res) => {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: 'Password Reset',
-        html: `<p>Please click on the following link to reset your password:</p><p><a href="https://aliragab752001-b5a2994d54c4.herokuapp.com/restPassword/${token}">Reset Password</a></p>`
+        html: `<p>Please click on the following link to reset your password:</p><p><a href="http://localhost:5000/restPassword/${token}">Reset Password</a></p>`
     };
     console.log(mailOptions)
 
